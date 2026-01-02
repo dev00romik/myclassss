@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="uk" class="magic-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Чарівний сад кохання | Для тебе</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Dancing+Script:wght@700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="magic-garden.css">
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌺</text></svg>">
+    
+    <style>
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a2f1d 0%, #1a4f2d 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1s ease;
+        }
+        
+        .loading-flower {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            animation: flower-bloom 2s infinite;
+        }
+        
+        .petal {
+            position: absolute;
+            width: 40px;
+            height: 60px;
+            background: #ff6b9d;
+            border-radius: 50%;
+            transform-origin: bottom center;
+        }
+        
+        .petal:nth-child(1) { transform: rotate(0deg); }
+        .petal:nth-child(2) { transform: rotate(60deg); }
+        .petal:nth-child(3) { transform: rotate(120deg); }
+        .petal:nth-child(4) { transform: rotate(180deg); }
+        .petal:nth-child(5) { transform: rotate(240deg); }
+        .petal:nth-child(6) { transform: rotate(300deg); }
+        
+        .loading-text {
+            position: absolute;
+            bottom: 30%;
+            color: #ffd700;
+            font-family: 'Dancing Script', cursive;
+            font-size: 24px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <!-- Загрузочный экран -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-flower">
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+        </div>
+        <div class="loading-text">Сад кохання розквітає...</div>
+    </div>
+    
+    <!-- Волшебный фон -->
+    <div class="magic-background">
+        <div class="stars"></div>
+        <div class="fireflies"></div>
+        <div class="floating-particles"></div>
+        <div class="garden-floor"></div>
+    </div>
+    
+    <!-- Основной контейнер -->
+    <div class="garden-container">
+        <!-- Магический заголовок -->
+        <header class="magic-header">
+            <div class="enchanted-title">
+                <h1><i class="fas fa-magic"></i> Чарівний сад кохання</h1>
+                <h2 id="herName">Для <span contenteditable="true">моєї принцеси</span></h2>
+                <div class="magic-sparkle"></div>
+            </div>
+            
+            <div class="season-selector">
+                <button class="season-btn active" data-season="spring">🌺 Весна</button>
+                <button class="season-btn" data-season="summer">🌞 Літо</button>
+                <button class="season-btn" data-season="autumn">🍂 Осінь</button>
+                <button class="season-btn" data-season="winter">❄️ Зима</button>
+            </div>
+        </header>
+        
+        <!-- Интерактивный сад -->
+        <main class="enchanted-garden">
+            <!-- Цветы-интерактивы -->
+            <div class="flower-bed">
+                <!-- Цветок признаний -->
+                <div class="magic-flower confession-flower" data-flower="confession">
+                    <div class="flower-head">
+                        <div class="petals">
+                            <div class="petal"></div>
+                            <div class="petal"></div>
+                            <div class="petal"></div>
+                            <div class="petal"></div>
+                            <div class="petal"></div>
+                        </div>
+                        <div class="flower-center"></div>
+                    </div>
+                    <div class="flower-stem"></div>
+                    <div class="flower-leaf"></div>
+                    <div class="flower-label">Мої признання</div>
+                </div>
+                
+                <!-- Цветок воспоминаний -->
+                <div class="magic-flower memories-flower" data-flower="memories">
+                    <div class="flower-head">
+                        <div class="petals">
+                            <div class="petal"></div>
+                            <div class="petal"></div>
+                            <div class="petal"></div>
+                            <div class="petal"></div>
+                            <div class="petal"></div>
+                        </div>
+                        <div class="flower-center"></div>
+                    </div>
+                    <div class="flower-stem"></div>
+                    <div class="flower-leaf"></div>
+                    <div class="flower-label">Спогади</div>
+                </div>
+                
+                <!-- Цветок обещаний -->
+                <div class="magic-flower promises-flower" data-flower="promises">
+                    <div class="flower-head">
+                        <div class="petals">
+                            <div class="petal"></div>
+                            <div class="petal"></div>
+                            <div class="petal"></div>
+                            <div class="petal"></div>
+                            <div class="petal"></div>
+                        </div>
+                        <div class="flower-center"></div>
+                    </div>
+                    <div class="flower-stem"></div>
+                    <div class="flower-leaf"></div>
+                    <div class="flower-label">Обіцянки</div>
+                </div>
+                
+                <!-- Цветок музыки -->
+                <div class="magic-flower music-flower" data-flower="music">
+                    <div class="flower-head">
+                        <div class="petals">
+                            <div class="petal"></div>
+                            <div class="petal"></div>
+                            <div class="petal"></div>
+                            <div class="petal"></div>
+                            <div class="petal"></div>
+                        </div>
+                        <div class="flower-center"></div>
+                    </div>
+                    <div class="flower-stem"></div>
+                    <div class="flower-leaf"></div>
+                    <div class="flower-label">Наша пісня</div>
+                </div>
+                
+                <!-- Цветок секретов -->
+                <div class="magic-flower secrets-flower" data-flower="secrets">
+                    <div class="flower-head">
+                        <div class="petals">
+                            <div class="petal"></div>
+                            <div class="petal"></div>
+                            <div class="petal"></div>
+                            <div class="petal"></div>
+                            <div class="petal"></div>
+                        </div>
+                        <div class="flower-center"></div>
+                    </div>
+                    <div class="flower-stem"></div>
+                    <div class="flower-leaf"></div>
+                    <div class="flower-label">Секрети</div>
+                </div>
+            </div>
+            
+            <!-- Фонтан любви -->
+            <div class="love-fountain">
+                <div class="fountain-base"></div>
+                <div class="water-flow"></div>
+                <div class="water-spray">
+                    <div class="droplet"></div>
+                    <div class="droplet"></div>
+                    <div class="droplet"></div>
+                    <div class="droplet"></div>
+                    <div class="droplet"></div>
+                </div>
+                <div class="fountain-title">Фонтан любові</div>
+                <button class="wish-btn" id="makeWishBtn">
+                    <i class="fas fa-star"></i> Загадати бажання
+                </button>
+            </div>
+            
+            <!-- Волшебное дерево -->
+            <div class="magic-tree">
+                <div class="trunk">
+                    <div class="bark"></div>
+                    <div class="bark"></div>
+                    <div class="bark"></div>
+                </div>
+                <div class="branches">
+                    <div class="branch"></div>
+                    <div class="branch"></div>
+                    <div class="branch"></div>
+                    <div class="branch"></div>
+                </div>
+                <div class="leaves">
+                    <div class="leaf"></div>
+                    <div class="leaf"></div>
+                    <div class="leaf"></div>
+                    <div class="leaf"></div>
+                    <div class="leaf"></div>
+                    <div class="leaf"></div>
+                </div>
+                <div class="tree-hearts">
+                    <div class="heart-fruit"></div>
+                    <div class="heart-fruit"></div>
+                    <div class="heart-fruit"></div>
+                </div>
+                <div class="tree-label">Дерево наших мрій</div>
+            </div>
+        </main>
+        
+        <!-- Панель контента -->
+        <section class="content-panel" id="contentPanel">
+            <div class="panel-header">
+                <h3 class="panel-title">Оберіть квітку...</h3>
+                <button class="close-panel" id="closePanelBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="panel-content">
+                <!-- Контент будет динамически загружаться -->
+                <div class="default-message">
+                    <i class="fas fa-seedling"></i>
+                    <p>Оберіть будь-яку квітку в саду, щоб відкрити її секрет</p>
+                </div>
+                
+                <!-- Разделы контента (скрыты по умолчанию) -->
+                <div class="content-section confession-content hidden">
+                    <h4><i class="fas fa-heart"></i> Мої признання</h4>
+                    <div class="love-letter">
+                        <p class="letter-date">Сьогоднішній день</p>
+                        <p>Кохання моє,</p>
+                        <p>Кожного дня ти нагадуєш мені, що справжня краса – це не зовнішність, а світло, яке світиться зсередини. Твоя доброта, твій сміх, твої мрії – все це робить тебе найчудовішою людиною, яку я коли-небудь зустрічав.</p>
+                        <p>Я люблю не тільки за те, ким ти є, але й за те, ким я стаю, коли я поруч з тобою. Ти робиш мене кращою версією себе.</p>
+                        <p>Моє серце належить тобі повністю і беззастережно.</p>
+                        <p class="letter-signature">Назавжди твій</p>
+                    </div>
+                    
+                    <div class="confession-actions">
+                        <button class="action-btn" id="writeConfessionBtn">
+                            <i class="fas fa-feather"></i> Написати своє
+                        </button>
+                        <button class="action-btn" id="saveConfessionBtn">
+                            <i class="fas fa-save"></i> Зберегти
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="content-section memories-content hidden">
+                    <h4><i class="fas fa-camera-retro"></i> Наші спогади</h4>
+                    
+                    <div class="memories-gallery">
+                        <div class="memory-item" data-memory="1">
+                            <div class="memory-preview">Перша зустріч</div>
+                            <div class="memory-date">❤️ Початок історії</div>
+                        </div>
+                        <div class="memory-item" data-memory="2">
+                            <div class="memory-preview">Перше побачення</div>
+                            <div class="memory-date">✨ Незабутній день</div>
+                        </div>
+                        <div class="memory-item" data-memory="3">
+                            <div class="memory-preview">Спільні мрії</div>
+                            <div class="memory-date">🌠 Плани на майбутнє</div>
+                        </div>
+                    </div>
+                    
+                    <div class="add-memory">
+                        <input type="text" class="memory-input" id="memoryInput" placeholder="Опишіть ваш спогад...">
+                        <button class="add-btn" id="addMemoryBtn">
+                            <i class="fas fa-plus"></i> Додати спогад
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="content-section promises-content hidden">
+                    <h4><i class="fas fa-handshake"></i> Мої обіцянки тобі</h4>
+                    
+                    <div class="promises-list">
+                        <div class="promise-item">
+                            <input type="checkbox" id="promise1" checked>
+                            <label for="promise1">Завжди підтримувати тебе</label>
+                        </div>
+                        <div class="promise-item">
+                            <input type="checkbox" id="promise2" checked>
+                            <label for="promise2">Бути чесним і відкритим</label>
+                        </div>
+                        <div class="promise-item">
+                            <input type="checkbox" id="promise3" checked>
+                            <label for="promise3">Поважати твої мрії</label>
+                        </div>
+                        <div class="promise-item">
+                            <input type="checkbox" id="promise4" checked>
+                            <label for="promise4">Турбуватися про тебе</label>
+                        </div>
+                        <div class="promise-item">
+                            <input type="checkbox" id="promise5">
+                            <label for="promise5">Ніколи не завдавати болю</label>
+                        </div>
+                    </div>
+                    
+                    <button class="add-promise-btn" id="addPromiseBtn">
+                        <i class="fas fa-plus-circle"></i> Додати нову обіцянку
+                    </button>
+                </div>
+                
+                <div class="content-section music-content hidden">
+                    <h4><i class="fas fa-music"></i> Наша пісня</h4>
+                    
+                    <div class="music-player">
+                        <div class="album-art">
+                            <div class="vinyl-disc">
+                                <div class="vinyl-ring"></div>
+                                <div class="vinyl-center"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="player-controls">
+                            <div class="song-info">
+                                <div class="song-title">Мелодія кохання</div>
+                                <div class="song-artist">Для моєї любові</div>
+                            </div>
+                            
+                            <div class="controls">
+                                <button class="control-btn" id="prevBtn">
+                                    <i class="fas fa-step-backward"></i>
+                                </button>
+                                <button class="control-btn play-btn" id="playBtn">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <button class="control-btn" id="nextBtn">
+                                    <i class="fas fa-step-forward"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                            
+                            <div class="volume-control">
+                                <i class="fas fa-volume-down"></i>
+                                <input type="range" id="volumeSlider" min="0" max="100" value="70">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="playlist">
+                        <div class="playlist-item active">
+                            <div class="song-name">Ти - моя муза</div>
+                            <div class="song-duration">3:45</div>
+                        </div>
+                        <div class="playlist-item">
+                            <div class="song-name">Серцебиття</div>
+                            <div class="song-duration">4:20</div>
+                        </div>
+                        <div class="playlist-item">
+                            <div class="song-name">Безмежне кохання</div>
+                            <div class="song-duration">3:30</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-section secrets-content hidden">
+                    <h4><i class="fas fa-lock"></i> Секрети для тебе</h4>
+                    
+                    <div class="secrets-container">
+                        <div class="secret-note">
+                            <div class="note-header">
+                                <div class="note-title">Таємне послання</div>
+                                <div class="note-date">Лише для твоїх очей</div>
+                            </div>
+                            <div class="note-content">
+                                <p>Іноді я просто дивлюся на тебе і не можу повірити, наскільки мені пощастило. Ти - найбільший подарунок мого життя.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="secret-reveal">
+                            <button class="reveal-btn" id="revealSecretBtn">
+                                <i class="fas fa-key"></i> Отримати новий секрет
+                            </button>
+                            <div class="secret-output" id="secretOutput"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Лунный календарь -->
+        <div class="moon-calendar">
+            <div class="moon-phase">
+                <div class="moon"></div>
+            </div>
+            <div class="calendar-info">
+                <div class="day-count" id="dayCount">День 0</div>
+                <div class="love-meter">
+                    <div class="meter-label">Рівень кохання</div>
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 87%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Магические заклинания -->
+        <div class="spell-book">
+            <button class="spell-btn" id="growFlowersBtn">
+                <i class="fas fa-seedling"></i> Виростити квіти
+            </button>
+            <button class="spell-btn" id="nightModeBtn">
+                <i class="fas fa-moon"></i> Нічний режим
+            </button>
+            <button class="spell-btn" id="butterfliesBtn">
+                <i class="fas fa-butterfly"></i> Викликати метеликів
+            </button>
+        </div>
+        
+        <!-- Футер -->
+        <footer class="garden-footer">
+            <div class="footer-heart">
+                <i class="fas fa-heartbeat"></i>
+            </div>
+            <div class="footer-text">
+                Цей сад буде розквітати вічно, як і моє кохання до тебе
+            </div>
+            <div class="magic-signature">
+                Створено з <i class="fas fa-magic"></i> та <i class="fas fa-heart"></i>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Модальное окно для признаний -->
+    <div class="modal-overlay hidden" id="confessionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-feather-alt"></i> Написати признання</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <textarea id="confessionText" placeholder="Напишіть тут своє найщиріше признання..."></textarea>
+                <div class="modal-actions">
+                    <button class="modal-btn save-btn">Зберегти в саду</button>
+                    <button class="modal-btn cancel-btn">Скасувати</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="magic-garden.js"></script>
+</body>
+</html>

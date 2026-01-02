@@ -1,0 +1,1403 @@
+/**
+ * Волшебный сад любви
+ * Интерактивный сайт-признание
+ */
+
+// ===== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ И СОСТОЯНИЯ =====
+const MagicGarden = {
+    // Текущий сезон
+    currentSeason: 'spring',
+    
+    // Состояние системы
+    isNightMode: false,
+    isPlayingMusic: false,
+    butterfliesActive: false,
+    
+    // Данные пользователя
+    userData: {
+        herName: 'моєї принцеси',
+        dayCount: 1,
+        loveLevel: 87,
+        confessions: [],
+        memories: [],
+        promises: [],
+        secrets: []
+    },
+    
+    // Секретные сообщения
+    secretMessages: [
+        "Коли я тебе бачу, все навколо ніби зупиняється. Ти - моя найкраща реальність.",
+        "Твоя посмішка здатна розвіяти будь-яку хмару на моєму небі.",
+        "Кожен день з тобою - це нова сторінка в найкращій книзі мого життя.",
+        "Ти робиш звичайні моменти надзвичайними просто своєю присутністю.",
+        "Моє серце знайшло свій дім в твоїх очах.",
+        "Ти - причина, чому я вірю у казки.",
+        "Коли ми разом, навіть дощ здається романтичним.",
+        "Твої обійми - моє улюблене місце у всьому світі.",
+        "Кожна твоя риса - це ще одна причина любити тебе.",
+        "Ти - мій спокій у бурхливому світі."
+    ],
+    
+    // Песни для плеера
+    songs: [
+        { title: 'Ти - моя муза', artist: 'Для моєї любові', duration: '3:45' },
+        { title: 'Серцебиття', artist: 'Наш ритм', duration: '4:20' },
+        { title: 'Безмежне кохання', artist: 'Вічні почуття', duration: '3:30' },
+        { title: 'Зоряна ніч', artist: 'Під твоїм небом', duration: '4:05' },
+        { title: 'Весняна мелодія', artist: 'Пробудження почуттів', duration: '3:15' }
+    ],
+    
+    currentSongIndex: 0,
+    
+    // Инициализация сада
+    init: function() {
+        console.log('🌺 Ініціалізація Чарівного Саду Кохання...');
+        
+        // Скрываем загрузочный экран
+        setTimeout(() => {
+            document.getElementById('loadingScreen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.display = 'none';
+                this.setupGarden();
+            }, 1000);
+        }, 2000);
+        
+        // Загружаем сохраненные данные
+        this.loadUserData();
+        
+        // Настройка обработчиков событий
+        this.setupEventListeners();
+        
+        // Создание фоновых эффектов
+        this.createBackgroundEffects();
+        
+        // Обновление интерфейса
+        this.updateInterface();
+        
+        console.log('✅ Сад готовий до відвідування!');
+    },
+    
+    // Настройка сада
+    setupGarden: function() {
+        // Создаем светлячков
+        this.createFireflies();
+        
+        // Создаем парящие частицы
+        this.createFloatingParticles();
+        
+        // Инициализируем календарь
+        this.initCalendar();
+        
+        // Показываем приветственное сообщение
+        this.showNotification('Ласкаво просимо до Чарівного Саду Кохання! 🌸');
+    },
+    
+    // Настройка обработчиков событий
+    setupEventListeners: function() {
+        // Обработчики для цветов
+        document.querySelectorAll('.magic-flower').forEach(flower => {
+            flower.addEventListener('click', (e) => {
+                this.handleFlowerClick(e.target.closest('.magic-flower'));
+            });
+        });
+        
+        // Обработчики для сезонов
+        document.querySelectorAll('.season-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                this.changeSeason(e.target.dataset.season);
+            });
+        });
+        
+        // Кнопка закрытия панели
+        document.getElementById('closePanelBtn').addEventListener('click', () => {
+            this.closeContentPanel();
+        });
+        
+        // Кнопка загадать желание
+        document.getElementById('makeWishBtn').addEventListener('click', () => {
+            this.makeWish();
+        });
+        
+        // Магические заклинания
+        document.getElementById('growFlowersBtn').addEventListener('click', () => {
+            this.growFlowers();
+        });
+        
+        document.getElementById('nightModeBtn').addEventListener('click', () => {
+            this.toggleNightMode();
+        });
+        
+        document.getElementById('butterfliesBtn').addEventListener('click', () => {
+            this.summonButterflies();
+        });
+        
+        // Музыкальный плеер
+        document.getElementById('playBtn').addEventListener('click', () => {
+            this.toggleMusic();
+        });
+        
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            this.prevSong();
+        });
+        
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            this.nextSong();
+        });
+        
+        document.getElementById('volumeSlider').addEventListener('input', (e) => {
+            this.changeVolume(e.target.value);
+        });
+        
+        // Элементы плейлиста
+        document.querySelectorAll('.playlist-item').forEach((item, index) => {
+            item.addEventListener('click', () => {
+                this.selectSong(index);
+            });
+        });
+        
+        // Кнопка показа секрета
+        document.getElementById('revealSecretBtn').addEventListener('click', () => {
+            this.revealSecret();
+        });
+        
+        // Кнопка написания признания
+        document.getElementById('writeConfessionBtn').addEventListener('click', () => {
+            this.openConfessionModal();
+        });
+        
+        // Кнопка добавления воспоминания
+        document.getElementById('addMemoryBtn').addEventListener('click', () => {
+            this.addMemory();
+        });
+        
+        // Кнопка добавления обещания
+        document.getElementById('addPromiseBtn').addEventListener('click', () => {
+            this.addPromise();
+        });
+        
+        // Модальное окно
+        document.querySelector('.close-modal').addEventListener('click', () => {
+            this.closeConfessionModal();
+        });
+        
+        document.querySelector('.cancel-btn').addEventListener('click', () => {
+            this.closeConfessionModal();
+        });
+        
+        document.querySelector('.save-btn').addEventListener('click', () => {
+            this.saveConfession();
+        });
+        
+        // Обработка изменений имени
+        document.querySelector('#herName span').addEventListener('input', (e) => {
+            this.userData.herName = e.target.textContent;
+            this.saveUserData();
+        });
+        
+        // Глобальные обработчики
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.closeContentPanel();
+                this.closeConfessionModal();
+            }
+        });
+    },
+    
+    // Создание фоновых эффектов
+    createBackgroundEffects: function() {
+        // Создаем 50 частиц
+        const particlesContainer = document.querySelector('.floating-particles');
+        
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            
+            // Случайные параметры
+            const size = Math.random() * 10 + 5;
+            const left = Math.random() * 100;
+            const top = Math.random() * 100;
+            const delay = Math.random() * 20;
+            const duration = Math.random() * 30 + 20;
+            const opacity = Math.random() * 0.3 + 0.1;
+            
+            particle.style.cssText = `
+                width: ${size}px;
+                height: ${size}px;
+                left: ${left}%;
+                top: ${top}%;
+                animation-delay: ${delay}s;
+                animation-duration: ${duration}s;
+                opacity: ${opacity};
+            `;
+            
+            particlesContainer.appendChild(particle);
+        }
+    },
+    
+    // Создание светлячков
+    createFireflies: function() {
+        const firefliesContainer = document.querySelector('.fireflies');
+        
+        for (let i = 0; i < 30; i++) {
+            const firefly = document.createElement('div');
+            firefly.className = 'firefly';
+            
+            // Случайные параметры
+            const left = Math.random() * 100;
+            const top = Math.random() * 100;
+            const delay = Math.random() * 15;
+            const duration = Math.random() * 20 + 10;
+            const size = Math.random() * 4 + 2;
+            
+            firefly.style.cssText = `
+                left: ${left}%;
+                top: ${top}%;
+                animation-delay: ${delay}s;
+                animation-duration: ${duration}s;
+                width: ${size}px;
+                height: ${size}px;
+            `;
+            
+            firefliesContainer.appendChild(firefly);
+        }
+    },
+    
+    // Обработка клика по цветку
+    handleFlowerClick: function(flower) {
+        const flowerType = flower.dataset.flower;
+        
+        // Анимация цветка
+        this.animateFlower(flower);
+        
+        // Показываем соответствующий контент
+        this.showContent(flowerType);
+        
+        // Показываем панель контента
+        this.showContentPanel();
+    },
+    
+    // Анимация цветка
+    animateFlower: function(flower) {
+        const flowerHead = flower.querySelector('.flower-head');
+        
+        // Добавляем класс анимации
+        flowerHead.style.animation = 'bloom 0.5s ease';
+        
+        // Убираем анимацию через время
+        setTimeout(() => {
+            flowerHead.style.animation = '';
+        }, 500);
+        
+        // Создаем эффект лепестков
+        this.createPetalEffect(flower);
+    },
+    
+    // Создание эффекта лепестков
+    createPetalEffect: function(flower) {
+        const rect = flower.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top;
+        
+        // Создаем 10 лепестков
+        for (let i = 0; i < 10; i++) {
+            const petal = document.createElement('div');
+            petal.className = 'floating-petal';
+            
+            // Цвет лепестка
+            const flowerType = flower.dataset.flower;
+            let color;
+            
+            switch(flowerType) {
+                case 'confession': color = '#ff6b9d'; break;
+                case 'memories': color = '#06d6a0'; break;
+                case 'promises': color = '#ffd166'; break;
+                case 'music': color = '#9d4edd'; break;
+                case 'secrets': color = '#7209b7'; break;
+            }
+            
+            // Случайные параметры
+            const size = Math.random() * 15 + 10;
+            const angle = Math.random() * Math.PI * 2;
+            const distance = Math.random() * 100 + 50;
+            const duration = Math.random() * 2 + 1;
+            const delay = Math.random() * 0.5;
+            
+            petal.style.cssText = `
+                position: fixed;
+                width: ${size}px;
+                height: ${size}px;
+                background: ${color};
+                border-radius: 50%;
+                left: ${centerX}px;
+                top: ${centerY}px;
+                z-index: 100;
+                pointer-events: none;
+                transform-origin: center;
+                animation: petal-float ${duration}s ease-out ${delay}s forwards;
+            `;
+            
+            // Добавляем анимацию
+            const keyframes = `
+                @keyframes petal-float-${Date.now()} {
+                    0% {
+                        transform: translate(0, 0) rotate(0deg);
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) rotate(360deg);
+                        opacity: 0;
+                    }
+                }
+            `;
+            
+            const style = document.createElement('style');
+            style.textContent = keyframes;
+            document.head.appendChild(style);
+            
+            petal.style.animationName = `petal-float-${Date.now()}`;
+            
+            document.body.appendChild(petal);
+            
+            // Удаляем лепесток после анимации
+            setTimeout(() => {
+                petal.remove();
+                style.remove();
+            }, (duration + delay) * 1000);
+        }
+    },
+    
+    // Показ контента
+    showContent: function(contentType) {
+        // Скрываем все секции
+        document.querySelectorAll('.content-section').forEach(section => {
+            section.classList.add('hidden');
+        });
+        
+        // Показываем выбранную секцию
+        const targetSection = document.querySelector(`.${contentType}-content`);
+        if (targetSection) {
+            targetSection.classList.remove('hidden');
+            
+            // Обновляем заголовок панели
+            const panelTitle = document.querySelector('.panel-title');
+            const titles = {
+                confession: 'Мої признання 💌',
+                memories: 'Наші спогади 📸',
+                promises: 'Мої обіцянки 🤝',
+                music: 'Наша пісня 🎵',
+                secrets: 'Секрети для тебе 🔐'
+            };
+            
+            panelTitle.innerHTML = `<i class="fas fa-${this.getIconForContent(contentType)}"></i> ${titles[contentType]}`;
+            
+            // Особые действия для каждого типа контента
+            switch(contentType) {
+                case 'confession':
+                    this.loadConfessions();
+                    break;
+                case 'memories':
+                    this.loadMemories();
+                    break;
+                case 'music':
+                    this.updateMusicPlayer();
+                    break;
+            }
+        }
+    },
+    
+    // Получение иконки для типа контента
+    getIconForContent: function(contentType) {
+        const icons = {
+            confession: 'heart',
+            memories: 'camera-retro',
+            promises: 'handshake',
+            music: 'music',
+            secrets: 'lock'
+        };
+        
+        return icons[contentType] || 'heart';
+    },
+    
+    // Показ панели контента
+    showContentPanel: function() {
+        document.querySelector('.content-panel').style.display = 'block';
+        setTimeout(() => {
+            document.querySelector('.content-panel').style.opacity = '1';
+            document.querySelector('.content-panel').style.transform = 'translateY(0)';
+        }, 10);
+    },
+    
+    // Закрытие панели контента
+    closeContentPanel: function() {
+        const panel = document.querySelector('.content-panel');
+        panel.style.opacity = '0';
+        panel.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            panel.style.display = 'none';
+        }, 300);
+    },
+    
+    // Смена сезона
+    changeSeason: function(season) {
+        // Обновляем активную кнопку
+        document.querySelectorAll('.season-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        document.querySelector(`[data-season="${season}"]`).classList.add('active');
+        
+        // Меняем тему
+        this.currentSeason = season;
+        document.body.className = `${season}-theme magic-theme`;
+        
+        // Обновляем CSS переменные
+        this.updateSeasonColors(season);
+        
+        // Сезонные эффекты
+        this.applySeasonEffects(season);
+        
+        // Показываем уведомление
+        const seasonNames = {
+            spring: 'Весна 🌸',
+            summer: 'Літо 🌞',
+            autumn: 'Осінь 🍂',
+            winter: 'Зима ❄️'
+        };
+        
+        this.showNotification(`Сезон змінено на: ${seasonNames[season]}`);
+    },
+    
+    // Обновление цветов сезона
+    updateSeasonColors: function(season) {
+        const root = document.documentElement;
+        
+        const colors = {
+            spring: {
+                primary: '#ff6b9d',
+                secondary: '#ffd166',
+                accent: '#06d6a0',
+                bg: '#f8f9fa'
+            },
+            summer: {
+                primary: '#ff9e6d',
+                secondary: '#ffd93d',
+                accent: '#6bcf7f',
+                bg: '#fff9f0'
+            },
+            autumn: {
+                primary: '#e76f51',
+                secondary: '#f4a261',
+                accent: '#2a9d8f',
+                bg: '#fefae0'
+            },
+            winter: {
+                primary: '#a8dadc',
+                secondary: '#457b9d',
+                accent: '#1d3557',
+                bg: '#f1faee'
+            }
+        };
+        
+        const seasonColors = colors[season];
+        
+        root.style.setProperty('--primary', seasonColors.primary);
+        root.style.setProperty('--secondary', seasonColors.secondary);
+        root.style.setProperty('--accent', seasonColors.accent);
+        root.style.setProperty('--bg-color', seasonColors.bg);
+    },
+    
+    // Применение сезонных эффектов
+    applySeasonEffects: function(season) {
+        // Удаляем старые эффекты
+        document.querySelectorAll('.season-effect').forEach(effect => effect.remove());
+        
+        // Добавляем новые эффекты в зависимости от сезона
+        switch(season) {
+            case 'spring':
+                this.createSpringEffect();
+                break;
+            case 'summer':
+                this.createSummerEffect();
+                break;
+            case 'autumn':
+                this.createAutumnEffect();
+                break;
+            case 'winter':
+                this.createWinterEffect();
+                break;
+        }
+    },
+    
+    // Создание весеннего эффекта (лепестки)
+    createSpringEffect: function() {
+        for (let i = 0; i < 20; i++) {
+            setTimeout(() => {
+                this.createFallingPetal();
+            }, i * 300);
+        }
+    },
+    
+    // Создание летнего эффекта (солнечные лучи)
+    createSummerEffect: function() {
+        const rays = document.createElement('div');
+        rays.className = 'season-effect';
+        rays.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(255, 215, 0, 0.1), transparent 50%),
+                       radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.1), transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        `;
+        
+        document.body.appendChild(rays);
+    },
+    
+    // Создание осеннего эффекта (падающие листья)
+    createAutumnEffect: function() {
+        for (let i = 0; i < 15; i++) {
+            setTimeout(() => {
+                this.createFallingLeaf();
+            }, i * 500);
+        }
+    },
+    
+    // Создание зимнего эффекта (снежинки)
+    createWinterEffect: function() {
+        for (let i = 0; i < 30; i++) {
+            setTimeout(() => {
+                this.createSnowflake();
+            }, i * 200);
+        }
+    },
+    
+    // Создание падающего лепестка
+    createFallingPetal: function() {
+        const petal = document.createElement('div');
+        petal.className = 'season-effect falling-leaf';
+        
+        // Случайные параметры
+        const left = Math.random() * 100;
+        const size = Math.random() * 15 + 10;
+        const duration = Math.random() * 10 + 10;
+        const delay = Math.random() * 5;
+        const color = `hsl(${Math.random() * 60 + 300}, 70%, 70%)`;
+        
+        petal.style.cssText = `
+            left: ${left}%;
+            width: ${size}px;
+            height: ${size}px;
+            background: ${color};
+            animation-duration: ${duration}s;
+            animation-delay: ${delay}s;
+        `;
+        
+        document.body.appendChild(petal);
+        
+        // Удаляем через время
+        setTimeout(() => {
+            petal.remove();
+        }, (duration + delay) * 1000);
+    },
+    
+    // Создание падающего листа
+    createFallingLeaf: function() {
+        const leaf = document.createElement('div');
+        leaf.className = 'season-effect falling-leaf';
+        
+        // Случайные параметры
+        const left = Math.random() * 100;
+        const size = Math.random() * 20 + 15;
+        const duration = Math.random() * 15 + 10;
+        const delay = Math.random() * 5;
+        const color = `hsl(${Math.random() * 30 + 20}, 70%, 50%)`;
+        
+        leaf.style.cssText = `
+            left: ${left}%;
+            width: ${size}px;
+            height: ${size}px;
+            background: ${color};
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            animation-duration: ${duration}s;
+            animation-delay: ${delay}s;
+        `;
+        
+        document.body.appendChild(leaf);
+        
+        setTimeout(() => {
+            leaf.remove();
+        }, (duration + delay) * 1000);
+    },
+    
+    // Создание снежинки
+    createSnowflake: function() {
+        const snowflake = document.createElement('div');
+        snowflake.className = 'season-effect';
+        
+        // Случайные параметры
+        const left = Math.random() * 100;
+        const size = Math.random() * 10 + 5;
+        const duration = Math.random() * 20 + 10;
+        const delay = Math.random() * 5;
+        const opacity = Math.random() * 0.7 + 0.3;
+        
+        snowflake.style.cssText = `
+            position: fixed;
+            left: ${left}%;
+            top: -20px;
+            width: ${size}px;
+            height: ${size}px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: ${opacity};
+            filter: blur(${size / 4}px);
+            animation: leaf-fall ${duration}s linear ${delay}s infinite;
+        `;
+        
+        document.body.appendChild(snowflake);
+    },
+    
+    // Загадать желание
+    makeWish: function() {
+        const wishes = [
+            "Щоб наше кохання завжди розквітало, як квіти в цьому саду.",
+            "Щоб кожен наш день був наповнений щастям та посмішками.",
+            "Щоб ми завжди розуміли та підтримували одне одного.",
+            "Щоб наші мрії збувалися разом.",
+            "Щоб наше кохання було таким же безмежним, як зоряне небо."
+        ];
+        
+        const randomWish = wishes[Math.floor(Math.random() * wishes.length)];
+        
+        this.showNotification(`💫 Ваше бажання: ${randomWish}`);
+        
+        // Анимация фонтана
+        const fountain = document.querySelector('.love-fountain');
+        fountain.style.animation = 'none';
+        
+        setTimeout(() => {
+            fountain.style.animation = 'fountain-wish 1s ease';
+        }, 10);
+        
+        // Создание эффекта искр
+        this.createSparkEffect();
+    },
+    
+    // Создание эффекта искр
+    createSparkEffect: function() {
+        const fountainRect = document.querySelector('.love-fountain').getBoundingClientRect();
+        const centerX = fountainRect.left + fountainRect.width / 2;
+        const centerY = fountainRect.top + fountainRect.height / 2;
+        
+        for (let i = 0; i < 20; i++) {
+            const spark = document.createElement('div');
+            spark.className = 'spark';
+            
+            const angle = Math.random() * Math.PI * 2;
+            const distance = Math.random() * 100 + 50;
+            const size = Math.random() * 8 + 4;
+            const duration = Math.random() * 1 + 0.5;
+            
+            spark.style.cssText = `
+                position: fixed;
+                left: ${centerX}px;
+                top: ${centerY}px;
+                width: ${size}px;
+                height: ${size}px;
+                background: linear-gradient(45deg, #ffd700, #ff6b00);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 100;
+                animation: spark-fly ${duration}s ease-out forwards;
+            `;
+            
+            const keyframes = `
+                @keyframes spark-fly-${Date.now()} {
+                    0% {
+                        transform: translate(0, 0) scale(1);
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(0);
+                        opacity: 0;
+                    }
+                }
+            `;
+            
+            const style = document.createElement('style');
+            style.textContent = keyframes;
+            document.head.appendChild(style);
+            
+            spark.style.animationName = `spark-fly-${Date.now()}`;
+            
+            document.body.appendChild(spark);
+            
+            setTimeout(() => {
+                spark.remove();
+                style.remove();
+            }, duration * 1000);
+        }
+    },
+    
+    // Вырастить цветы
+    growFlowers: function() {
+        // Анимация всех цветов
+        document.querySelectorAll('.magic-flower').forEach((flower, index) => {
+            setTimeout(() => {
+                this.animateFlower(flower);
+            }, index * 200);
+        });
+        
+        // Создание новых цветов на короткое время
+        for (let i = 0; i < 3; i++) {
+            setTimeout(() => {
+                this.createTemporaryFlower();
+            }, i * 500);
+        }
+        
+        this.showNotification('🌼 Квіти розквітають з новою силою!');
+    },
+    
+    // Создание временного цветка
+    createTemporaryFlower: function() {
+        const flowerBed = document.querySelector('.flower-bed');
+        const tempFlower = document.createElement('div');
+        
+        tempFlower.className = 'magic-flower temporary-flower';
+        tempFlower.innerHTML = `
+            <div class="flower-head">
+                <div class="petals">
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                </div>
+                <div class="flower-center"></div>
+            </div>
+            <div class="flower-stem"></div>
+            <div class="flower-leaf"></div>
+        `;
+        
+        // Случайный цвет
+        const colors = ['#ff6b9d', '#06d6a0', '#ffd166', '#9d4edd', '#7209b7'];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        
+        tempFlower.querySelectorAll('.petal').forEach(petal => {
+            petal.style.background = randomColor;
+        });
+        
+        tempFlower.style.cssText = `
+            position: absolute;
+            left: ${Math.random() * 80 + 10}%;
+            top: ${Math.random() * 100}px;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 1s ease;
+        `;
+        
+        flowerBed.appendChild(tempFlower);
+        
+        // Анимация появления
+        setTimeout(() => {
+            tempFlower.style.opacity = '1';
+            tempFlower.style.transform = 'scale(1)';
+        }, 10);
+        
+        // Исчезновение через 5 секунд
+        setTimeout(() => {
+            tempFlower.style.opacity = '0';
+            tempFlower.style.transform = 'scale(0)';
+            
+            setTimeout(() => {
+                tempFlower.remove();
+            }, 1000);
+        }, 5000);
+    },
+    
+    // Переключение ночного режима
+    toggleNightMode: function() {
+        this.isNightMode = !this.isNightMode;
+        
+        if (this.isNightMode) {
+            document.body.classList.add('night-mode');
+            this.showNotification('🌙 Нічний режим увімкнено. Дивіться на зірки!');
+            
+            // Создаем падающие звезды
+            this.createShootingStars();
+        } else {
+            document.body.classList.remove('night-mode');
+            this.showNotification('☀️ Денний режим увімкнено.');
+        }
+    },
+    
+    // Создание падающих звезд
+    createShootingStars: function() {
+        // Удаляем старые звезды
+        document.querySelectorAll('.shooting-star').forEach(star => star.remove());
+        
+        // Создаем новые звезды
+        for (let i = 0; i < 5; i++) {
+            setTimeout(() => {
+                this.createShootingStar();
+            }, i * 2000);
+        }
+    },
+    
+    // Создание падающей звезды
+    createShootingStar: function() {
+        const star = document.createElement('div');
+        star.className = 'shooting-star';
+        
+        // Случайные параметры
+        const top = Math.random() * 50;
+        const duration = Math.random() * 2 + 2;
+        const delay = Math.random() * 5;
+        
+        star.style.cssText = `
+            top: ${top}%;
+            animation-duration: ${duration}s;
+            animation-delay: ${delay}s;
+        `;
+        
+        document.body.appendChild(star);
+        
+        setTimeout(() => {
+            star.remove();
+        }, (duration + delay) * 1000);
+    },
+    
+    // Призвать бабочек
+    summonButterflies: function() {
+        if (this.butterfliesActive) return;
+        
+        this.butterfliesActive = true;
+        
+        // Создаем бабочек
+        for (let i = 0; i < 8; i++) {
+            this.createButterfly(i);
+        }
+        
+        this.showNotification('🦋 Метелики прилетіли до вашого саду!');
+        
+        // Автоматическое исчезновение через 10 секунд
+        setTimeout(() => {
+            this.butterfliesActive = false;
+        }, 10000);
+    },
+    
+    // Создание бабочки
+    createButterfly: function(index) {
+        const butterfly = document.createElement('div');
+        butterfly.className = 'butterfly';
+        
+        // Случайные параметры
+        const size = Math.random() * 30 + 20;
+        const left = -50;
+        const top = Math.random() * 80 + 10;
+        const duration = Math.random() * 20 + 10;
+        const delay = index * 500;
+        const color1 = `hsl(${Math.random() * 360}, 70%, 60%)`;
+        const color2 = `hsl(${Math.random() * 360}, 70%, 70%)`;
+        
+        butterfly.style.cssText = `
+            position: fixed;
+            left: ${left}px;
+            top: ${top}%;
+            width: ${size}px;
+            height: ${size}px;
+            background: linear-gradient(45deg, ${color1}, ${color2});
+            clip-path: polygon(50% 0%, 83% 12%, 100% 43%, 94% 78%, 68% 100%, 32% 100%, 6% 78%, 0% 43%, 17% 12%);
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.8;
+            animation: butterfly-fly ${duration}s ease-in-out ${delay}s infinite;
+        `;
+        
+        // Анимация полета
+        const keyframes = `
+            @keyframes butterfly-fly-${Date.now()} {
+                0% {
+                    transform: translateX(0) translateY(0) rotate(0deg);
+                    opacity: 0;
+                }
+                10% {
+                    opacity: 0.8;
+                }
+                90% {
+                    opacity: 0.8;
+                }
+                100% {
+                    transform: translateX(calc(100vw + 100px)) translateY(${Math.random() * 200 - 100}px) rotate(${Math.random() * 360}deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        
+        const style = document.createElement('style');
+        style.textContent = keyframes;
+        document.head.appendChild(style);
+        
+        butterfly.style.animationName = `butterfly-fly-${Date.now()}`;
+        
+        document.body.appendChild(butterfly);
+        
+        // Удаляем после анимации
+        setTimeout(() => {
+            butterfly.remove();
+            style.remove();
+        }, (duration + delay) * 1000);
+    },
+    
+    // Музыкальный плеер
+    toggleMusic: function() {
+        const playBtn = document.getElementById('playBtn');
+        const vinylDisc = document.querySelector('.vinyl-disc');
+        
+        this.isPlayingMusic = !this.isPlayingMusic;
+        
+        if (this.isPlayingMusic) {
+            playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            vinylDisc.classList.add('playing');
+            this.showNotification('🎵 Музика грає...');
+        } else {
+            playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            vinylDisc.classList.remove('playing');
+            this.showNotification('⏸️ Музика призупинена');
+        }
+    },
+    
+    // Предыдущая песня
+    prevSong: function() {
+        this.currentSongIndex--;
+        if (this.currentSongIndex < 0) {
+            this.currentSongIndex = this.songs.length - 1;
+        }
+        this.updateMusicPlayer();
+        this.showNotification(`⏮️ Грає: ${this.songs[this.currentSongIndex].title}`);
+    },
+    
+    // Следующая песня
+    nextSong: function() {
+        this.currentSongIndex++;
+        if (this.currentSongIndex >= this.songs.length) {
+            this.currentSongIndex = 0;
+        }
+        this.updateMusicPlayer();
+        this.showNotification(`⏭️ Грає: ${this.songs[this.currentSongIndex].title}`);
+    },
+    
+    // Выбор песни
+    selectSong: function(index) {
+        this.currentSongIndex = index;
+        this.updateMusicPlayer();
+        
+        // Обновляем активный элемент в плейлисте
+        document.querySelectorAll('.playlist-item').forEach((item, i) => {
+            if (i === index) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+        
+        this.showNotification(`🎶 Обрано: ${this.songs[index].title}`);
+    },
+    
+    // Обновление плеера
+    updateMusicPlayer: function() {
+        const currentSong = this.songs[this.currentSongIndex];
+        
+        document.querySelector('.song-title').textContent = currentSong.title;
+        document.querySelector('.song-artist').textContent = currentSong.artist;
+        
+        // Сброс прогресса
+        document.querySelector('.progress-fill').style.width = '0%';
+        
+        // Запуск прогресса
+        if (this.isPlayingMusic) {
+            setTimeout(() => {
+                document.querySelector('.progress-fill').style.width = '45%';
+            }, 100);
+        }
+    },
+    
+    // Изменение громкости
+    changeVolume: function(value) {
+        const volumeIcon = document.querySelector('.volume-control i');
+        
+        if (value > 66) {
+            volumeIcon.className = 'fas fa-volume-up';
+        } else if (value > 33) {
+            volumeIcon.className = 'fas fa-volume-down';
+        } else if (value > 0) {
+            volumeIcon.className = 'fas fa-volume-off';
+        } else {
+            volumeIcon.className = 'fas fa-volume-mute';
+        }
+    },
+    
+    // Показать секрет
+    revealSecret: function() {
+        const secretOutput = document.getElementById('secretOutput');
+        const randomIndex = Math.floor(Math.random() * this.secretMessages.length);
+        const randomSecret = this.secretMessages[randomIndex];
+        
+        secretOutput.textContent = randomSecret;
+        secretOutput.style.animation = 'none';
+        
+        setTimeout(() => {
+            secretOutput.style.animation = 'bloom 0.5s ease';
+        }, 10);
+        
+        // Добавляем в историю
+        this.userData.secrets.push({
+            date: new Date().toLocaleDateString(),
+            message: randomSecret
+        });
+        
+        this.saveUserData();
+    },
+    
+    // Открыть модальное окно для признания
+    openConfessionModal: function() {
+        document.getElementById('confessionModal').classList.remove('hidden');
+    },
+    
+    // Закрыть модальное окно
+    closeConfessionModal: function() {
+        document.getElementById('confessionModal').classList.add('hidden');
+        document.getElementById('confessionText').value = '';
+    },
+    
+    // Сохранить признание
+    saveConfession: function() {
+        const confessionText = document.getElementById('confessionText').value.trim();
+        
+        if (confessionText) {
+            this.userData.confessions.push({
+                date: new Date().toLocaleString(),
+                text: confessionText
+            });
+            
+            this.saveUserData();
+            this.closeConfessionModal();
+            this.showNotification('💌 Признання збережено в саду!');
+            
+            // Обновляем уровень любви
+            this.userData.loveLevel = Math.min(100, this.userData.loveLevel + 2);
+            this.updateLoveMeter();
+        }
+    },
+    
+    // Загрузить признания
+    loadConfessions: function() {
+        // В реальном приложении здесь была бы загрузка с сервера
+        console.log('Загрузка признаний...');
+    },
+    
+    // Добавить воспоминание
+    addMemory: function() {
+        const memoryInput = document.getElementById('memoryInput');
+        const memoryText = memoryInput.value.trim();
+        
+        if (memoryText) {
+            this.userData.memories.push({
+                date: new Date().toLocaleDateString(),
+                text: memoryText,
+                preview: memoryText.substring(0, 30) + '...'
+            });
+            
+            this.saveUserData();
+            memoryInput.value = '';
+            this.showNotification('📸 Спогад додано до колекції!');
+            
+            // Обновляем уровень любви
+            this.userData.loveLevel = Math.min(100, this.userData.loveLevel + 1);
+            this.updateLoveMeter();
+        }
+    },
+    
+    // Загрузить воспоминания
+    loadMemories: function() {
+        // В реальном приложении здесь была бы загрузка с сервера
+        console.log('Загрузка воспоминаний...');
+    },
+    
+    // Добавить обещание
+    addPromise: function() {
+        const promiseText = prompt('Введіть вашу нову обіцянку:');
+        
+        if (promiseText) {
+            this.userData.promises.push({
+                text: promiseText,
+                kept: false
+            });
+            
+            this.saveUserData();
+            this.showNotification('🤝 Нова обіцянка додана!');
+            
+            // Обновляем интерфейс обещаний
+            this.updatePromisesList();
+        }
+    },
+    
+    // Обновить список обещаний
+    updatePromisesList: function() {
+        const promisesList = document.querySelector('.promises-list');
+        
+        // Очищаем список
+        promisesList.innerHTML = '';
+        
+        // Добавляем обещания
+        this.userData.promises.forEach((promise, index) => {
+            const promiseItem = document.createElement('div');
+            promiseItem.className = 'promise-item';
+            
+            promiseItem.innerHTML = `
+                <input type="checkbox" id="promise${index + 1}" ${promise.kept ? 'checked' : ''}>
+                <label for="promise${index + 1}">${promise.text}</label>
+            `;
+            
+            // Обработчик изменения состояния
+            promiseItem.querySelector('input').addEventListener('change', (e) => {
+                promise.kept = e.target.checked;
+                this.saveUserData();
+                
+                if (e.target.checked) {
+                    this.showNotification('✅ Обіцянку виконано!');
+                    this.userData.loveLevel = Math.min(100, this.userData.loveLevel + 3);
+                    this.updateLoveMeter();
+                }
+            });
+            
+            promisesList.appendChild(promiseItem);
+        });
+    },
+    
+    // Инициализация календаря
+    initCalendar: function() {
+        // Устанавливаем начальную дату (можно изменить)
+        const startDate = new Date('2024-01-01');
+        const today = new Date();
+        const diffTime = Math.abs(today - startDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        this.userData.dayCount = diffDays;
+        document.getElementById('dayCount').textContent = `День ${diffDays}`;
+        
+        // Обновляем уровень любви
+        this.updateLoveMeter();
+    },
+    
+    // Обновление индикатора любви
+    updateLoveMeter: function() {
+        const meterFill = document.querySelector('.meter-fill');
+        meterFill.style.width = `${this.userData.loveLevel}%`;
+        
+        // Сохраняем данные
+        this.saveUserData();
+    },
+    
+    // Загрузка данных пользователя
+    loadUserData: function() {
+        const savedData = localStorage.getItem('magicGardenData');
+        
+        if (savedData) {
+            try {
+                const data = JSON.parse(savedData);
+                this.userData = { ...this.userData, ...data };
+                
+                // Обновляем имя
+                const nameElement = document.querySelector('#herName span');
+                if (nameElement && this.userData.herName) {
+                    nameElement.textContent = this.userData.herName;
+                }
+                
+                // Обновляем интерфейс
+                this.updateInterface();
+                
+            } catch (error) {
+                console.warn('Не вдалося завантажити збережені дані:', error);
+            }
+        }
+    },
+    
+    // Сохранение данных пользователя
+    saveUserData: function() {
+        try {
+            localStorage.setItem('magicGardenData', JSON.stringify(this.userData));
+        } catch (error) {
+            console.warn('Не вдалося зберегти дані:', error);
+        }
+    },
+    
+    // Обновление интерфейса
+    updateInterface: function() {
+        // Обновляем счетчик дней
+        document.getElementById('dayCount').textContent = `День ${this.userData.dayCount}`;
+        
+        // Обновляем индикатор любви
+        this.updateLoveMeter();
+        
+        // Обновляем список обещаний
+        this.updatePromisesList();
+    },
+    
+    // Показать уведомление
+    showNotification: function(message) {
+        // Создаем элемент уведомления
+        const notification = document.createElement('div');
+        notification.className = 'magic-notification';
+        
+        notification.innerHTML = `
+            <div class="notification-content">
+                <i class="fas fa-magic"></i>
+                <span>${message}</span>
+            </div>
+        `;
+        
+        // Стили для уведомления
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            transform: translateX(150%);
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Показываем уведомление
+        setTimeout(() => {
+            notification.style.transform = 'translateX(0)';
+        }, 10);
+        
+        // Скрываем через 3 секунды
+        setTimeout(() => {
+            notification.style.transform = 'translateX(150%)';
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 500);
+        }, 3000);
+    }
+};
+
+// ===== ДОПОЛНИТЕЛЬНЫЕ ФУНКЦИИ =====
+
+// Создание плавающих частиц
+function createFloatingParticles() {
+    // Уже реализовано в MagicGarden.createBackgroundEffects()
+}
+
+// Анимация для капель воды
+function animateWaterDroplets() {
+    const droplets = document.querySelectorAll('.droplet');
+    
+    droplets.forEach((droplet, index) => {
+        droplet.style.animation = `droplet-fall ${Math.random() * 2 + 2}s infinite ${index * 0.5}s`;
+    });
+}
+
+// Запуск анимации капель при загрузке
+window.addEventListener('load', () => {
+    animateWaterDroplets();
+});
+
+// Инициализация сада при полной загрузке страницы
+window.addEventListener('DOMContentLoaded', () => {
+    // Небольшая задержка для эффекта
+    setTimeout(() => {
+        MagicGarden.init();
+    }, 500);
+});
+
+// Добавляем дополнительные CSS анимации
+const additionalStyles = document.createElement('style');
+additionalStyles.textContent = `
+    @keyframes fountain-wish {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+    }
+    
+    @keyframes petal-float {
+        0% {
+            transform: translate(0, 0) rotate(0deg);
+            opacity: 1;
+        }
+        100% {
+            transform: translate(var(--tx, 100px), var(--ty, 100px)) rotate(360deg);
+            opacity: 0;
+        }
+    }
+    
+    @keyframes spark-fly {
+        0% {
+            transform: translate(0, 0) scale(1);
+            opacity: 1;
+        }
+        100% {
+            transform: translate(var(--tx, 100px), var(--ty, 100px)) scale(0);
+            opacity: 0;
+        }
+    }
+    
+    @keyframes butterfly-fly {
+        0% {
+            transform: translateX(0) translateY(0) rotate(0deg);
+            opacity: 0;
+        }
+        10% {
+            opacity: 0.8;
+        }
+        90% {
+            opacity: 0.8;
+        }
+        100% {
+            transform: translateX(calc(100vw + 100px)) translateY(var(--ty, 0px)) rotate(var(--rot, 360deg));
+            opacity: 0;
+        }
+    }
+    
+    .magic-notification {
+        backdrop-filter: blur(10px);
+    }
+    
+    .temporary-flower {
+        filter: drop-shadow(0 0 10px currentColor);
+    }
+    
+    .content-panel {
+        transition: all 0.3s ease;
+        opacity: 0;
+        transform: translateY(20px);
+    }
+`;
+
+document.head.appendChild(additionalStyles);
+
+// Экспорт для глобального доступа
+window.MagicGarden = MagicGarden;
